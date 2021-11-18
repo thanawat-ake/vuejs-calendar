@@ -7,6 +7,9 @@ Object.defineProperty(Vue.prototype, '$moment', { get() { return this.$root.mome
 
 import App from './components/App.vue';
 
+import Vuex from 'vuex';
+Vue.use(Vuex);
+
 new Vue({
   el: '#app',
   data: {
@@ -14,5 +17,11 @@ new Vue({
   },
   components: {
     App
+  },
+  store: {
+    state: {
+      currentMonth: 12,
+      currentYear: 2021
+    }
   }
 });
