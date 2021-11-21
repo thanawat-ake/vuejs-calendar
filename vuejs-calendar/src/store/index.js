@@ -5,6 +5,8 @@ Vue.use(Vuex);
 import moment from 'moment-timezone';
 moment.tz.setDefault('UTC');
 
+import Axios from "axios";
+
 export default new Vuex.Store({ // store object
     state: {
         currentMonth: 11,
@@ -33,14 +35,31 @@ export default new Vuex.Store({ // store object
         eventFormActive(state, payload) {
             state.eventFormActive = payload;
         },
-        addEvent(state, payload) {
-            state.events.push({
-                description: payload,
-                date: state.eventFormDate
-            });
+        addEvent(state, payload) { // called by line 51
+            state.events.push(payload);
         },
         eventFormDate(state, payload) {
             state.eventFormDate = payload;
+        }
+    },
+    actions: {
+        addEvent(context, payload) {
+            return new Promise((resolve, reject) => {
+                let obj = {
+                    description: payload,
+                    date: context.state.eventFormDate
+                };
+                Axios.post('/add_event', obj).then(response => {
+                    if(response.status === 200) {
+                        context.commit('addEvent', obj);
+                        // setTimeout(function () {
+                            resolve();
+                        // }, 2000);
+                    } else {
+                        reject();
+                    }
+                });
+            });
         }
     }
 });
